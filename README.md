@@ -1,4 +1,4 @@
-# 🌾 AgroTech 2026: Quiz de Agricultura de Precisión & Big Data
+# 🌾 Agricultura de Precision: Quiz de Agricultura de Precisión & Big Data
 
 Un cuestionario interactivo premium diseñado para la educación en tecnologías agrícolas modernas, integrando conceptos de Agricultura 4.0 y las 5 Vs del Big Data.
 
@@ -6,37 +6,33 @@ Un cuestionario interactivo premium diseñado para la educación en tecnologías
 Puedes acceder al cuestionario directamente aquí: 
 [https://shepro28031628.github.io/quizz/](https://shepro28031628.github.io/quizz/)
 
-## ✨ Características Principales
-- **Interacción Premium**: Diseño basado en Glassmorphism con efectos visuales modernos y transiciones fluidas.
-- **Multimedia Educativa**: 13 imágenes únicas generadas por IA que ilustran conceptos técnicos complejos.
-- **Totalmente Responsive**: Optimizado para su uso en computadores portátiles, tablets y teléfonos celulares.
-- **Feedback Inmediato**: Cada pregunta incluye una explicación técnica (*Rationale*) para reforzar el aprendizaje.
-- **Seguimiento Dinámico**: Barra de progreso en tiempo real y visualizador de puntaje final circular.
+## ✨ Características Premium
+- **Fondo Cinematográfico**: Experiencia inmersiva con una vista panorámica de una Smart Farm en alta resolución.
+- **Sistema de Modales Dinámicos**: Feedback instantáneo mediante ventanas emergentes que centran la atención y eliminan el scroll.
+- **Gamificación Avanzada**: 
+    - **Efecto de Confeti**: Celebración visual al acertar respuestas.
+    - **Animación de Vibración (Shake)**: Indicador dinámico de respuestas incorrectas.
+- **Multimedia Educativa**: Galería de 13 imágenes únicas generadas por IA para cada pregunta.
+- **Totalmente Responsive**: Diseño "Mobile-First" optimizado para smartphones, tablets y laptops.
+- **Feedback Técnico**: Explicaciones detalladas (*Rationale*) para cada opción.
 
 ## 🛠️ Tecnologías Utilizadas
-- **HTML5 & CSS3**: Estructura semántica y diseño personalizado.
-- **Tailwind CSS**: Framework de estilos para un acabado profesional y responsividad.
-- **JavaScript Vanilla**: Motor lógico del cuestionario sin dependencias externas.
-- **Google Fonts**: Tipografía 'Outfit' para legibilidad superior.
+- **HTML5 & CSS3**: Estructura y animaciones personalizadas.
+- **Tailwind CSS**: Framework para diseño responsivo y consistente.
+- **JavaScript Vanilla**: Motor lógico sin dependencias pesadas.
+- **Canvas-Confetti**: Efectos de partículas de alto rendimiento.
 
 ## 📂 Estructura del Repositorio
 ```text
-├── index.html        # Archivo principal de la aplicación
-├── assets/           # Galería de imágenes (13 recursos únicos)
-├── docs/             # Especificaciones técnicas detalladas
-└── README.md         # Guía general del proyecto
+├── index.html        # Aplicación principal
+├── assets/           # Imágenes temáticas y fondo (bg.png)
+├── docs/             # Especificaciones técnicas
+└── README.md         # Documentación general
 ```
 
 ## 📝 Contenido Académico
-El quiz cubre temas críticos como:
-- Gestión diferenciada de cultivos.
-- Sensores NPK y monitoreo satelital (NDVI).
-- Historia de la agricultura (Berkeley Earth).
+Cubre los pilares de la agricultura moderna:
+- Gestión diferenciada y Agricultura 4.0.
+- Sensores NPK e índices satelitales.
 - Las 5 Vs del Big Data: **Volumen, Velocidad, Variedad, Veracidad y Valor**.
-
-## ⚙️ Cómo usar localmente
-1. Clona este repositorio o descarga la carpeta completa.
-2. Abre el archivo `index.html` en cualquier navegador moderno.
-3. Asegúrate de mantener la carpeta `assets/` en la misma ruta para visualizar los elementos multimedia.
-
 
