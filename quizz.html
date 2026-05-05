@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz: Agricultura de Precisión y Big Data</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+        
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: radial-gradient(circle at top left, #1a4731, #061a10);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            color: #f8fafc;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            color: #1e293b;
+        }
+
+        .option-btn {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            transform: translateX(8px);
+            background-color: #f0fdf4;
+            border-color: #22c55e;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+
+        .image-container {
+            width: 100%;
+            height: 180px; /* Móvil por defecto */
+            border-radius: 1.25rem;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+            background: #f1f5f9;
+        }
+
+        @media (min-width: 768px) {
+            .image-container {
+                height: 260px; /* Desktop */
+            }
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .image-container:hover img {
+            transform: scale(1.05);
+        }
+
+        .progress-glow {
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="quiz-container" class="max-w-2xl w-full glass-card rounded-2xl md:rounded-3xl p-4 md:p-10 transition-all duration-500">
+        <!-- Header -->
+        <div class="mb-6 md:mb-8">
+            <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-2 mb-4">
+                <h1 class="text-xl md:text-2xl font-extrabold text-green-800 tracking-tight">Agricultura de Precision</h1>
+                <span id="question-counter" class="w-fit px-3 py-1 bg-green-100 text-green-700 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-wider">Pregunta 1 / 13</span>
+            </div>
+            <div class="w-full bg-gray-100 h-3 rounded-full overflow-hidden border border-gray-200">
+                <div id="progress-bar" class="bg-gradient-to-r from-green-400 to-green-600 h-full transition-all duration-700 ease-out progress-glow" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- Question Section -->
+        <div id="question-box" class="animate-fade">
+            <div id="image-wrapper" class="image-container">
+                <img id="question-image" src="" alt="Cargando..." class="opacity-0 transition-opacity duration-500">
+            </div>
+            <h2 id="question-text" class="text-xl md:text-2xl font-bold text-gray-800 mb-6 leading-tight">Cargando pregunta...</h2>
+            <div id="options-container" class="space-y-3">
+                <!-- Options injected by JS -->
+            </div>
+        </div>
+
+        <!-- Feedback Section -->
+        <div id="feedback-box" class="hidden mt-8 p-5 rounded-2xl border-2 animate-fade">
+            <div class="flex items-start gap-4">
+                <div id="feedback-icon" class="mt-1"></div>
+                <div>
+                    <p id="feedback-status" class="font-black text-lg mb-1"></p>
+                    <p id="feedback-rationale" class="text-gray-600 leading-relaxed"></p>
+                </div>
+            </div>
+            <button id="next-btn" class="mt-6 w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl transition-all shadow-lg hover:shadow-green-200 active:scale-95">
+                Continuar
+            </button>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results-box" class="hidden text-center animate-fade">
+            <div class="mb-6 inline-flex p-4 bg-green-50 rounded-full">
+                <svg class="w-16 h-16 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <h2 class="text-3xl font-black text-gray-800 mb-2">¡Desafío Completado!</h2>
+            <p class="text-gray-500 mb-8 font-medium">Has demostrado tus conocimientos en Agricultura y Big Data</p>
+            
+            <div class="relative inline-block mb-10">
+                <svg class="w-40 h-40 transform -rotate-90">
+                    <circle cx="80" cy="80" r="70" stroke="currentColor" stroke-width="12" fill="transparent" class="text-gray-100" />
+                    <circle id="score-circle" cx="80" cy="80" r="70" stroke="currentColor" stroke-width="12" fill="transparent" stroke-dasharray="440" stroke-dashoffset="440" class="text-green-500 transition-all duration-1000 ease-out" />
+                </svg>
+                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                    <span id="final-score" class="text-5xl font-black text-gray-800">0</span>
+                    <span class="text-gray-400 font-bold uppercase text-xs">Puntos</span>
+                </div>
+            </div>
+
+            <button onclick="location.reload()" class="w-full bg-gray-900 hover:bg-black text-white font-bold py-4 rounded-xl transition-all shadow-xl active:scale-95">
+                Intentar de Nuevo
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "¿Cuál es el objetivo principal de la gestión diferenciada en la agricultura de precisión?",
+                image: "assets/hero.png",
+                options: [
+                    { text: "Aplicar la misma cantidad de fertilizante en todo el terreno.", isCorrect: false, rationale: "La gestión diferenciada busca adaptarse a las necesidades específicas de cada zona." },
+                    { text: "Ajustar insumos según la demanda real de cada zona del cultivo.", isCorrect: true, rationale: "Optimiza recursos aplicando exactamente lo que cada sección del suelo necesita." },
+                    { text: "Eliminar por completo el uso de maquinaria pesada.", isCorrect: false, rationale: "Utiliza maquinaria avanzada e inteligente en lugar de eliminarla." },
+                    { text: "Depender de la observación visual del agricultor.", isCorrect: false, rationale: "Sustituye la observación visual con datos precisos de sensores y satélites." }
+                ]
+            },
+            {
+                question: "Según la evolución histórica, ¿qué tecnología define a la 'Agricultura 4.0'?",
+                image: "assets/iot.png",
+                options: [
+                    { text: "Primeros mapas de variabilidad química del suelo.", isCorrect: false, rationale: "Este hito corresponde a la década de los 80." },
+                    { text: "GPS civil con precisión de centímetros.", isCorrect: false, rationale: "Fue el avance clave de los años 90." },
+                    { text: "Integración de Inteligencia Artificial (IA) e Internet de las Cosas (IoT).", isCorrect: true, rationale: "Se define por modelos predictivos y sensores conectados." },
+                    { text: "Invención del arado motorizado.", isCorrect: false, rationale: "Pertenece a la mecanización tradicional." }
+                ]
+            },
+            {
+                question: "En el contexto de sensores de suelo, ¿qué significan las siglas NPK?",
+                image: "assets/soil.png",
+                options: [
+                    { text: "Nivel de Presión y Kilopascales.", isCorrect: false, rationale: "Estas son unidades de medida física." },
+                    { text: "Nitrógeno, Fósforo y Potasio.", isCorrect: true, rationale: "Representan los tres macronutrientes esenciales para el cultivo." },
+                    { text: "Níquel, Plomo y Kriptón.", isCorrect: false, rationale: "No son los nutrientes básicos analizados en precisión." },
+                    { text: "Nueva Práctica de Labranza.", isCorrect: false, rationale: "NPK se refiere a componentes químicos del suelo." }
+                ]
+            },
+            {
+                question: "¿Qué mide el índice satelital NDVI?",
+                image: "assets/satellite.png",
+                options: [
+                    { text: "La profundidad del agua subterránea.", isCorrect: false, rationale: "Se centra en la superficie vegetal." },
+                    { text: "El vigor verde de la vegetación mediante bandas roja e infrarroja.", isCorrect: true, rationale: "Permite conocer el estado de salud de las plantas desde el espacio." },
+                    { text: "La concentración de pesticidas en el aire.", isCorrect: false, rationale: "Es un índice de vegetación." },
+                    { text: "El peso total de la cosecha en tiempo real.", isCorrect: false, rationale: "El peso se mide con monitores de rendimiento en las máquinas." }
+                ]
+            },
+            {
+                question: "¿Qué dataset del proyecto UNINPAHU aporta mayor profundidad histórica?",
+                image: "assets/temp.png",
+                options: [
+                    { text: "Crop Recommendation (DS 1).", isCorrect: false, rationale: "Se enfoca en muestras actuales para modelos." },
+                    { text: "Pesticides Use (DS 5).", isCorrect: false, rationale: "Cubre de 1990 a 2016." },
+                    { text: "Temperature de Berkeley Earth (DS 4).", isCorrect: true, rationale: "Ofrece datos desde 1743 hasta 2013." },
+                    { text: "Crop Yield Merged (DS 2).", isCorrect: false, rationale: "Su ventana temporal es de 1990 a 2013." }
+                ]
+            },
+            {
+                question: "¿Cuál es el impacto estimado en el incremento de la producción mediante estas tecnologías?",
+                image: "assets/yield.png",
+                options: [
+                    { text: "5%", isCorrect: false, rationale: "El impacto documentado es mayor." },
+                    { text: "15%", isCorrect: true, rationale: "Se estima un incremento del 15% en el rendimiento de los cultivos." },
+                    { text: "50%", isCorrect: false, rationale: "Supera las estimaciones actuales globales." },
+                    { text: "80%", isCorrect: false, rationale: "No corresponde a los datos del estudio." }
+                ]
+            },
+            {
+                question: "¿Qué fase de la metodología transforma datos brutos en planes de acción físicos?",
+                image: "assets/prescription.png",
+                options: [
+                    { text: "Captura", isCorrect: false, rationale: "Aquí se recolectan los datos." },
+                    { text: "Prescripción", isCorrect: true, rationale: "Decide la acción exacta basándose en el análisis previo." },
+                    { text: "Procesamiento", isCorrect: false, rationale: "Organiza los datos pero la prescripción define la orden." },
+                    { text: "Almacenamiento", isCorrect: false, rationale: "No constituye una fase de decisión activa." }
+                ]
+            },
+            {
+                question: "Según el análisis de sostenibilidad, ¿cuál es un beneficio clave en Europa?",
+                image: "assets/sustainable.png",
+                options: [
+                    { text: "Erradicación de zonas desérticas.", isCorrect: false, rationale: "No elimina desiertos naturales." },
+                    { text: "Reducción de nitratos en los acuíferos.", isCorrect: true, rationale: "Evita que el exceso de químicos se filtre al agua." },
+                    { text: "Liderazgo exclusivo en producción de soja.", isCorrect: false, rationale: "Se asocia principalmente a América del Sur." },
+                    { text: "Sustitución de ingenieros por robots.", isCorrect: false, rationale: "La tendencia es el trabajo colaborativo supervisado." }
+                ]
+            },
+            {
+                question: "¿A qué se refiere la dimensión de Volumen en el Big Data agrícola?",
+                image: "assets/volume.png",
+                options: [
+                    { text: "Al tamaño físico de los servidores de almacenamiento.", isCorrect: false, rationale: "Se refiere a la cantidad de datos, no al hardware." },
+                    { text: "A la cantidad masiva de datos generados por sensores y satélites diariamente.", isCorrect: true, rationale: "El volumen describe la escala de datos que supera capacidades tradicionales." },
+                    { text: "Al nivel de ruido sonoro en la maquinaria.", isCorrect: false, rationale: "No tiene relación con el sonido." },
+                    { text: "Al espacio que ocupan los cultivos en el terreno.", isCorrect: false, rationale: "Se refiere a datos digitales." }
+                ]
+            },
+            {
+                question: "En la monitorización de cultivos, ¿qué describe la Velocidad?",
+                image: "assets/velocity.png",
+                options: [
+                    { text: "La rapidez de los tractores autónomos.", isCorrect: false, rationale: "Se refiere al flujo de información." },
+                    { text: "La rapidez con la que se procesan los datos para decisiones en tiempo real.", isCorrect: true, rationale: "Es vital para reaccionar ante plagas o estrés hídrico de inmediato." },
+                    { text: "El tiempo que tarda en crecer el cultivo.", isCorrect: false, rationale: "Eso es biología, no Big Data." },
+                    { text: "La conexión de internet en el campo.", isCorrect: false, rationale: "Es un habilitador, pero la velocidad es el flujo de datos." }
+                ]
+            },
+            {
+                question: "Al integrar imágenes, números de sensores y registros climáticos, ¿qué 'V' gestionamos?",
+                image: "assets/variety.png",
+                options: [
+                    { text: "Velocidad", isCorrect: false, rationale: "Se refiere al tiempo." },
+                    { text: "Variedad", isCorrect: true, rationale: "El Big Data maneja datos estructurados y no estructurados de diversas fuentes." },
+                    { text: "Valor", isCorrect: false, rationale: "Se refiere a la utilidad." },
+                    { text: "Volumen", isCorrect: false, rationale: "Se refiere a la cantidad." }
+                ]
+            },
+            {
+                question: "¿Por qué es crítica la Veracidad en los modelos predictivos de cosecha?",
+                image: "assets/veracity.png",
+                options: [
+                    { text: "Para asegurar que los datos no tengan ruido o sesgos erróneos.", isCorrect: true, rationale: "La calidad de los datos es fundamental para la fiabilidad del modelo." },
+                    { text: "Para cumplir con normativas legales de privacidad.", isCorrect: false, rationale: "Eso es seguridad/privacidad." },
+                    { text: "Para que el agricultor no mienta en sus registros.", isCorrect: false, rationale: "Se refiere a la limpieza técnica de los datos de sensores." },
+                    { text: "Para reducir el costo de los sensores.", isCorrect: false, rationale: "La veracidad no afecta el precio del hardware." }
+                ]
+            },
+            {
+                question: "¿Cuál es el objetivo final de la 'V' de Valor?",
+                image: "assets/bigdata.png",
+                options: [
+                    { text: "Vender los datos a otras empresas.", isCorrect: false, rationale: "Ese es un modelo de negocio, no el concepto técnico de valor." },
+                    { text: "Transformar datos brutos en conocimiento accionable y rentabilidad.", isCorrect: true, rationale: "Sin utilidad técnica o económica, el análisis no cumple su propósito." },
+                    { text: "Aumentar el precio de la cosecha.", isCorrect: false, rationale: "Es una consecuencia posible, pero el valor es la utilidad del dato." },
+                    { text: "Tener más gráficos en el dashboard.", isCorrect: false, rationale: "Los gráficos son visualización, no valor intrínseco." }
+                ]
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        const questionText = document.getElementById('question-text');
+        const questionImage = document.getElementById('question-image');
+        const optionsContainer = document.getElementById('options-container');
+        const feedbackBox = document.getElementById('feedback-box');
+        const feedbackStatus = document.getElementById('feedback-status');
+        const feedbackRationale = document.getElementById('feedback-rationale');
+        const feedbackIcon = document.getElementById('feedback-icon');
+        const nextBtn = document.getElementById('next-btn');
+        const questionCounter = document.getElementById('question-counter');
+        const progressBar = document.getElementById('progress-bar');
+        const resultsBox = document.getElementById('results-box');
+        const questionBox = document.getElementById('question-box');
+        const finalScoreDisplay = document.getElementById('final-score');
+        const scoreCircle = document.getElementById('score-circle');
+
+        function loadQuestion() {
+            const currentQuestion = questions[currentQuestionIndex];
+            
+            // Animation reset
+            questionBox.style.opacity = "0";
+            questionBox.style.transform = "translateY(10px)";
+            
+            setTimeout(() => {
+                questionText.textContent = currentQuestion.question;
+                questionImage.src = currentQuestion.image;
+                questionImage.onload = () => questionImage.classList.remove('opacity-0');
+                
+                questionCounter.textContent = `Pregunta ${currentQuestionIndex + 1} / ${questions.length}`;
+                progressBar.style.width = `${((currentQuestionIndex) / questions.length) * 100}%`;
+                
+                optionsContainer.innerHTML = '';
+                currentQuestion.options.forEach((option, index) => {
+                    const button = document.createElement('button');
+                    button.textContent = option.text;
+                    button.className = "option-btn w-full text-left p-4 rounded-2xl border-2 border-gray-100 bg-white font-semibold text-gray-700 shadow-sm";
+                    button.onclick = () => selectOption(index);
+                    optionsContainer.appendChild(button);
+                });
+
+                feedbackBox.classList.add('hidden');
+                questionBox.style.opacity = "1";
+                questionBox.style.transform = "translateY(0)";
+            }, 50);
+        }
+
+        function selectOption(index) {
+            const currentQuestion = questions[currentQuestionIndex];
+            const isCorrect = currentQuestion.options[index].isCorrect;
+            
+            if (isCorrect) {
+                score++;
+                feedbackStatus.textContent = "¡Excelente!";
+                feedbackStatus.className = "font-black text-xl text-green-600";
+                feedbackBox.className = "mt-8 p-6 rounded-2xl border-2 border-green-200 bg-green-50 block animate-fade";
+                feedbackIcon.innerHTML = `<div class="bg-green-500 p-2 rounded-lg text-white"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg></div>`;
+            } else {
+                feedbackStatus.textContent = "Casi lo logras";
+                feedbackStatus.className = "font-black text-xl text-red-600";
+                feedbackBox.className = "mt-8 p-6 rounded-2xl border-2 border-red-200 bg-red-50 block animate-fade";
+                feedbackIcon.innerHTML = `<div class="bg-red-500 p-2 rounded-lg text-white"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg></div>`;
+            }
+
+            feedbackRationale.textContent = currentQuestion.options[index].rationale;
+            
+            const buttons = document.querySelectorAll('.option-btn');
+            buttons.forEach((btn, i) => {
+                btn.disabled = true;
+                if (currentQuestion.options[i].isCorrect) {
+                    btn.classList.add('border-green-500', 'bg-green-50', 'text-green-700');
+                } else if (i === index) {
+                    btn.classList.add('border-red-500', 'bg-red-50', 'text-red-700');
+                }
+            });
+        }
+
+        nextBtn.onclick = () => {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        };
+
+        function showResults() {
+            questionBox.classList.add('hidden');
+            feedbackBox.classList.add('hidden');
+            questionCounter.classList.add('hidden');
+            progressBar.style.width = "100%";
+            resultsBox.classList.remove('hidden');
+            
+            finalScoreDisplay.textContent = score;
+            const offset = 440 - (score / questions.length) * 440;
+            setTimeout(() => {
+                scoreCircle.style.strokeDashoffset = offset;
+            }, 300);
+        }
+
+        // Initialize
+        loadQuestion();
+    </script>
+</body>
+</html>
